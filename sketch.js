@@ -1,5 +1,5 @@
-let lineWidth = 4;
-let lineLength = lineWidth * 3;
+let lineWidth = 8;
+let lineLength = lineWidth;
 let pattern = [];
 let lastrowIndex = 0;
 let screenWidth = 0;
@@ -8,7 +8,8 @@ let waterfallWidth = 0;
 //position of second changed row, in fraction of the waterfall height
 let changeProportion= 0.5;
 let secondchangedRow;
-let lineRandomized = 0.05;
+let sizeRandomized = 0.2;
+let positionRandomized = 0.2;
 
 //framerate
 let fr = 7;
@@ -32,9 +33,9 @@ frameRate(fr);
 
 function draw() { 
 background(0);
-stroke(255);
-fill(255);
-rect(screenWidth/2 -waterfallWidth/2, 0, waterfallWidth, screenHeight);
+stroke(0);
+fill(127);
+rect(screenWidth/2 - waterfallWidth/2 + lineWidth, 0, waterfallWidth - lineWidth * 2, screenHeight);
 //setting first row0 at top
 if (lastrowIndex == 0) {
   randomRow(0);
@@ -68,7 +69,7 @@ function randomRow(rowIndex){
 }
   //matrix that holds the colors
     pattern[rowIndex][i] = myColor;
-    randomLine(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, myColor, lineWidth);
+    randomPoint(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, myColor, lineWidth);
     squarestartX = squarestartX + lineWidth; 
     
     } 
@@ -90,7 +91,7 @@ function oppositeRow(rowIndex){
     pattern[rowIndex][i] = myColor;
     stroke(myColor);
     strokeWeight(lineWidth);
-    randomLine(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, myColor, lineWidth);
+    randomPoint(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, myColor, lineWidth);
    
     squarestartX = squarestartX + lineWidth; 
     } 
@@ -104,7 +105,7 @@ function shiftRow(rowIndex){
   for (let i = 0; i < squareNum; i++) {
   pattern[rowIndex+1][i]=pattern[rowIndex][i];
   myColor = pattern[rowIndex +1][i];
-  randomLine(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, myColor, lineWidth);
+  randomPoint(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, myColor, lineWidth);
   squarestartX = squarestartX + lineWidth; 
     } 
 }
@@ -166,18 +167,28 @@ function squareColor(squareRow,squareColumn){
 function changeRow(rowNumber){
   for (let i = 0; i < squareNum; i++){
    newColor = squareColor(rowNumber,i);
-    randomLine(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, newColor, lineWidth);
+    randomPoint(squarestartX, squarestartY, squarestartX, squarestartY + lineLength, newColor, lineWidth);
     pattern[0][i] = newColor;
   }   
 }
 
-function randomLine(x1, y1, x2,y2, color, width){
+// function randomLine(x1, y1, x2,y2, color, width){
+//   stroke(color);
+//   strokeWeight(width);
+//   shift = lineRandomized * lineLength;
+//   x1shift = random(-shift,shift);
+//   y1shift = random(-shift,shift);
+//   x2shift = random(-shift,shift);
+//   y2shift = random(-shift,shift);
+//   line (x1 + x1shift, y1 + y1shift, x2 + x2shift, y2 + y2shift);
+// }
+
+function randomPoint(x1, y1, x2,y2, color, width){
   stroke(color);
-  strokeWeight(width);
-  shift = lineRandomized * lineLength;
+  sizeShift = random(-sizeRandomized * width, sizeRandomized * width);
+  strokeWeight(width + sizeShift);
+  shift = positionRandomized * lineLength;
   x1shift = random(-shift,shift);
   y1shift = random(-shift,shift);
-  x2shift = random(-shift,shift);
-  y2shift = random(-shift,shift);
-  line (x1 + x1shift, y1 + y1shift, x2 + x2shift, y2 + y2shift);
+  point ((x1 + x2)/2 + x1shift, (y1 + y2)/2 + y1shift);
 }
